@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "api/wsgi.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "buildCommand": "pip install -r requirements.txt && echo 'Build complete'"
+      }
     }
   ],
   "routes": [
