@@ -1,20 +1,31 @@
 from flask import Flask, render_template
 import feedparser
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 from bs4 import BeautifulSoup
 from transformers import pipeline
-from datetime import datetime, timedelta
+import os
+TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'templates')
+app = Flask(__name__, template_folder=TEMPLATE_DIR)
 
 
-app = Flask(__name__)
-
-# Use active and fresh feeds
+# RSS Feed sources
 RSS_FEEDS = {
     'india': 'https://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms',
     'global': 'https://timesofindia.indiatimes.com/rssfeeds/296589292.cms'
 }
 
+# Lazy initialization for summarizer
+summarizer = None
+HF_MODEL = os.getenv("HF_MODEL", "t5-small")  # default to t5-small
+
+def get_summarizer():
+    global summarizer
+    if summarizer is None:
+        summarizer = pipeline("summarization", model=HF_MODEL)
+    return summarizer
+
+# Fetch news articles (optionally filtering by last 24 hours)
 def fetch_news(feed_url, only_last_24_hours=False):
     feed = feedparser.parse(feed_url)
     articles = []
@@ -40,7 +51,7 @@ def fetch_news(feed_url, only_last_24_hours=False):
         clean_summary = BeautifulSoup(raw_summary, "html.parser").get_text().strip()
 
         if not clean_summary or clean_summary.lower() in ['no summary available', '']:
-            continue  # Skip if there's no usable summary
+            continue
 
         article = {
             'title': entry.get('title', 'No title'),
@@ -54,15 +65,14 @@ def fetch_news(feed_url, only_last_24_hours=False):
 
     return articles
 
-
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-
+# Route: Daily 24-hour summary
 @app.route('/report')
 def daily_report():
     indian_articles = fetch_news(RSS_FEEDS['india'], only_last_24_hours=True)
     global_articles = fetch_news(RSS_FEEDS['global'], only_last_24_hours=True)
 
     def summarize_individual(articles):
+        summarizer = get_summarizer()
         summarized = []
         for a in articles:
             input_text = a['title'] + ". " + a['summary']
@@ -83,20 +93,23 @@ def daily_report():
 
     return render_template("report.html", indian_articles=summarized_indian, global_articles=summarized_global)
 
-
+# Route: Home
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Route: Indian news
 @app.route('/india')
 def india_news():
     articles = fetch_news(RSS_FEEDS['india'])
     return render_template('news.html', articles=articles, country='India')
 
+# Route: Global news
 @app.route('/global')
 def global_news():
     articles = fetch_news(RSS_FEEDS['global'])
     return render_template('news.html', articles=articles, country='Global')
 
+# Run locally
 if __name__ == '__main__':
     app.run(debug=True)
