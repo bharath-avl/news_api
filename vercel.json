@@ -11,5 +11,8 @@
       "src": "/(.*)",
       "dest": "api/wsgi.py"
     }
-  ]
+  ],
+  "env": {
+    "PYTHON_WSGI": "gunicorn -w 1 -b 0.0.0.0:3000 api.wsgi:application"
+  }
 }
