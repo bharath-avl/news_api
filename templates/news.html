@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ country }} News</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .news-item {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .news-source {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: bold;
+        }
+        .news-date {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        .back-btn {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <a href="/" class="btn btn-secondary back-btn">← Back to Home</a>
+        <h1 class="mb-4">{{ country }} News</h1>
+        
+        {% if articles %}
+            {% for article in articles %}
+                <div class="news-item">
+                    <h3><a href="{{ article.link }}" target="_blank">{{ article.title }}</a></h3>
+                    <div class="d-flex justify-content-between mb-2">
+                        <!--<span class="news-source">{{ article.source }}</span>-->
+                        <!--<span class="news-date">{{ article.published }}</span>-->
+                    </div>
+                    <p>{{ article.summary }}</p>
+                    <a href="{{ article.link }}" target="_blank" class="btn btn-sm btn-outline-primary">Read more</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning">No news articles found. Please try again later.</div>
+        {% endif %}
+    </div>
+
+    <footer class="bg-light text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 World News Aggregator. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

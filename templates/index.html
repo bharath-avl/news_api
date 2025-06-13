@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World News Aggregator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .hero-section {
+      background-color: #f8f9fa;
+      padding: 4rem 0 2rem 0;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .news-card {
+      margin-bottom: 20px;
+      transition: transform 0.3s;
+    }
+    .news-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .report-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero-section text-center">
+    <a href="/report" class="btn btn-warning report-button">🗓️ View 24-Hour Report</a>
+    <div class="container">
+      <h1 class="display-4">World News Aggregator</h1>
+      <p class="lead">Get the latest news from India and the World in one place</p>
+      <div class="mt-4">
+        <a href="/india" class="btn btn-primary btn-lg mx-2">Indian News</a>
+        <a href="/global" class="btn btn-success btn-lg mx-2">Global News</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card news-card">
+          <div class="card-body">
+            <h2 class="card-title">Indian News</h2>
+            <p class="card-text">Latest news from top Indian news sources including Times of India, The Hindu, and NDTV.</p>
+            <a href="/india" class="btn btn-primary">View Indian News</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card news-card">
+          <div class="card-body">
+            <h2 class="card-title">Global News</h2>
+            <p class="card-text">Latest news from top news sources including CNN, Fox News, BBC News and Time Square.</p>
+            <a href="/global" class="btn btn-success">View Global News</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
